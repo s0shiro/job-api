@@ -114,5 +114,6 @@ export const jobs = pgTable('jobs', {
   salary: text('salary'),
   score: integer('score'),
   reasoning: text('reasoning'),
+  status: text('status').default('found').notNull(),
   createdAt: timestamp('created_at').defaultNow(),
 });

@@ -60,5 +60,31 @@ app.post('/v1/jobs', async (req, res) => {
   }
 })
 
+// UPDATE STATUS: Update job status by ID
+app.patch('/v1/jobs/:id/status', async (req, res) => {
+  try {
+    const { id } = req.params
+    const { status } = req.body
+
+    if (!status) {
+      return res.status(400).json({ error: 'Status is required' })
+    }
+
+    const updated = await db
+      .update(jobs)
+      .set({ status })
+      .where(eq(jobs.id, Number(id)))
+      .returning()
+
+    if (updated.length === 0) {
+      return res.status(404).json({ error: 'Job not found' })
+    }
+
+    res.json(updated[0])
+  } catch (error) {
+    res.status(500).json({ error: 'Database error' })
+  }
+})
+
 
 export default app
